@@ -122,7 +122,7 @@ export function ScreenContainer({
             gestureData.scrollToIndex(preCursor,{animate: false})
         }
     },[])
-    gestureData.cursor = 1;
+    // gestureData.cursor = 1;
     gestureData.screens = (children as any[]).length;
     if(!width||width>1){
         width = 1;
@@ -215,5 +215,3 @@ export function ScreenContainer({
         </GestureHandlerRootView>
     )
 }
-
-
