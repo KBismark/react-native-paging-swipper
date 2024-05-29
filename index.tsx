@@ -1,31 +1,21 @@
-import { View, ViewProps } from "react-native"
-import { type ContainerProps, type GestureData, ScreenContainer } from "@/components/scrollview";
+import { type ContainerProps, ScreenContainer as ScrollViewScreen } from "./components/scrollview";
+import { Screen } from "./components/screen";
+import { getGestureData } from "./utils/gesturedata";
+import { ScreenContainer as FlatListScreen, ContainerProps as FlatListContainerProps } from "./components/flatlist";
 
 export const Scrollable = {
-    getGestureData(): GestureData{
-        return {
-            direction: 'horizontal',
-            cursor: 1,
-        } as any
-    },
-    ScreenContainer,
-    NestedScreenContainer(props: ContainerProps){
+    getGestureData,
+    NestedScrollScreenContainer(props: ContainerProps){
         (props as any).isNested = true;
-        return <ScreenContainer {...props}/>
+        return <ScrollViewScreen {...props}/>
     },
-    Screen: (props: ViewProps&{
-        gestureData: GestureData;
-    })=>{
-
-        return (
-            <View {...props} style={[props.style,{width: props.gestureData.width, height: props.gestureData.height, }]}>
-                {props.children}
-            </View>
-        )
+    NestedFlatListScreenContainer<T=any>(props: FlatListContainerProps<T>){
+        (props as any).isNested = true;
+        return <FlatListScreen {...props}/>
     },
-    FlatListScreen: undefined,
-    NestedScrollViewScreen: undefined,
-    NestedFlatListScreen: undefined,
+    Screen: Screen,
+    FlatListScreenContainer: FlatListScreen,
+    ScrollViewScreenContainer: ScrollViewScreen
 }
 
 

@@ -1,14 +1,15 @@
-import { ScreenHeight, ScreenWidth } from "@/utils/window";
-import { GetScrollRatio } from "@/utils/scrolldata";
+import { ScreenHeight, ScreenWidth } from "../utils/window";
+import { GetScrollRatio } from "../utils/scrolldata";
 import { useEffect, useRef } from "react";
 import { ScrollView, ScrollViewProps, View, ViewProps } from "react-native"
 import { ScrollView as ScrollableView, GestureHandlerRootView, FlatList as FlatListView, Swipeable } from "react-native-gesture-handler";
+import { type GestureData } from "../utils/gesturedata";
 
 
 
 
 
-const onDoneScrolling = ({length, offset, direction, gestureData,callback}:{
+export const onDoneScrolling = ({length, offset, direction, gestureData,callback}:{
     length:number;
     direction: 'x'|'y';
     offset: {
@@ -54,14 +55,7 @@ const onDoneScrolling = ({length, offset, direction, gestureData,callback}:{
     gestureData.cursor = screenIndex;
     callback({animated:true,[direction]:(length*screenIndex)-length});
 }
-export type GestureData = {
-    direction: 'horizontal'|'vertical';
-    cursor: number;
-    screens: number;
-    width: number;
-    height:number;
-    scrollToIndex?:(index:number,options?:{animate:boolean})=>void
-}
+
 export type ContainerProps = {
     children?: React.ReactNode|React.JSX.Element;
     gestureData: GestureData;
@@ -98,6 +92,7 @@ export function ScreenContainer({
     ...rest
 }:ContainerProps){
     const ref = useRef<ScrollView>(null);
+    const preCursor = gestureData.cursor;
     useEffect(()=>{
         (gestureData as any).width = width;
         (gestureData as any).height = height;
@@ -122,6 +117,9 @@ export function ScreenContainer({
                 onScreen&&onScreen( gestureData.cursor )
                 automaticscroll = false;
             }, 50);
+        }
+        if(gestureData.cursor!==preCursor&&gestureData.screens<=preCursor){
+            gestureData.scrollToIndex(preCursor,{animate: false})
         }
     },[])
     gestureData.cursor = 1;
