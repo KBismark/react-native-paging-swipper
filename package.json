@@ -1,6 +1,6 @@
 {
   "name": "react-native-paging-swipper",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Simple pagination and swipping feature for react native",
   "main": "dist/index.js",
   "files": [
