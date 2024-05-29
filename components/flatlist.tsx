@@ -1,4 +1,4 @@
-import { ScreenHeight, ScreenWidth } from "@/utils/window";
+import { ScreenHeight, ScreenWidth } from "../utils/window";
 import { GetScrollRatio } from "../utils/scrolldata";
 import { useEffect, useRef } from "react";
 import { FlatListProps, ScrollView, ScrollViewProps, View, ViewProps } from "react-native"
@@ -8,17 +8,12 @@ import { type GestureData } from "../utils/gesturedata";
 import { onDoneScrolling } from "./scrollview";
 
 
-
-
-
-
-
 export type ContainerProps<ItemT> = {
-    children: React.ReactNode|React.JSX.Element;
+    // children: React.ReactNode|React.JSX.Element;
     gestureData: GestureData;
     sharableTopComponent?: React.ReactNode|React.JSX.Element;
     sharableBottomComponent?: React.ReactNode|React.JSX.Element;
-    ref: any;
+    // ref: any;
     /**
      * 
      * @param index Screen is indexed starting from the number `1`
@@ -44,14 +39,14 @@ export type ContainerProps<ItemT> = {
 
 
 export function ScreenContainer<ItemT = any>({
-    horizontal, children,
+    horizontal, 
     gestureData, width,
     height, sharableBottomComponent,
     sharableTopComponent, onScreen,
     renderItem, 
     ...rest
 }:ContainerProps<ItemT>){
-    const ref = useRef<ScrollView>(null);
+    const ref = useRef<FlatListView>(null);
     const preCursor = gestureData.cursor;
     useEffect(()=>{
         (gestureData as any).width = width;
@@ -66,23 +61,17 @@ export function ScreenContainer<ItemT = any>({
             }
             gestureData.cursor = index;
             automaticscroll = true;
-            const animate = options&&options.animate
-            ref.current.scrollTo(
+            const animate = options&&options.animate;
+            ref.current.scrollToIndex(
                 horizontal?
-                {animated:animate,x:((width as number)*index)-(width as number)}:
-                {animated:animate,y:((height as number)*index)-(height as number)}
+                {animated:animate,index: index-1}:
+                {animated:animate,index: index-1}
             );
-
-            timeout = setTimeout(() => {
-                onScreen&&onScreen( gestureData.cursor )
-                automaticscroll = false;
-            }, 50);
         };
         if(gestureData.cursor!==preCursor&&gestureData.screens<=preCursor){
             gestureData.scrollToIndex(preCursor,{animate: false})
         }
-    },[])
-    gestureData.cursor = 1;
+    },[]);
     gestureData.screens = rest.data?.length||1;
     if(!width||width>1){
         width = 1;
@@ -112,8 +101,10 @@ export function ScreenContainer<ItemT = any>({
     }
     const onDoneScrollingCallback = (data:any)=>{
         automaticscroll = true;
-        ref.current?.scrollTo(data);
-        timeout = setTimeout(activateScrollEndCallback, 50);
+        data.index = gestureData.cursor-1;
+        data.animated = !false;
+        // ref.current?.scrollToIndex(data);
+        timeout = setTimeout(activateScrollEndCallback, 10);
     }
     
     const onScrollEnd = horizontal? (e: any)=>{
@@ -123,9 +114,9 @@ export function ScreenContainer<ItemT = any>({
         timeout = setTimeout(()=>{
             onDoneScrolling({
                 length:width,direction:'x',gestureData:gestureData,
-                offset:scrollData.offset,callback:onDoneScrollingCallback
+                offset:scrollData.offset,callback: onDoneScrollingCallback
             })
-        }, 20);
+        }, 0);
     }
     : (e:any)=>{
         if(automaticscroll){ return}
@@ -134,9 +125,10 @@ export function ScreenContainer<ItemT = any>({
         timeout = setTimeout(()=>{
             onDoneScrolling({
                 length:height,direction:'y',gestureData:gestureData,
-                offset:scrollData.offset,callback:onDoneScrollingCallback
+                offset:scrollData.offset,callback: onDoneScrollingCallback
             })
-        }, 20);
+
+        }, 0);
     };
     const RenderItem = renderItem;
     const EmptyScren = ()=>{
@@ -160,7 +152,8 @@ export function ScreenContainer<ItemT = any>({
                     ref={ref as any} 
                     decelerationRate={'fast'} 
                     horizontal={horizontal} 
-                    onScrollEndDrag={onScrollEnd}  
+                    snapToInterval={horizontal?width:height}
+                    onMomentumScrollEnd={onScrollEnd}
                 />
                 {sharableBottomComponent}
             </View>
@@ -174,7 +167,7 @@ export function ScreenContainer<ItemT = any>({
                 renderItem={
                     RenderItem?
                     (props)=>{
-                        return <Screen gestureData={gestureData}><RenderItem {...props} /></Screen>
+                        return <Screen gestureData={gestureData} index={props.index}><RenderItem {...props} /></Screen>
                     }:
                     EmptyScren
                 }
@@ -183,7 +176,8 @@ export function ScreenContainer<ItemT = any>({
                 ref={ref as any} 
                 decelerationRate={'fast'} 
                 horizontal={horizontal} 
-                onScrollEndDrag={onScrollEnd}  
+                snapToInterval={horizontal?width:height}
+                onMomentumScrollEnd={onScrollEnd}
             />
             {sharableBottomComponent}
         </GestureHandlerRootView>
