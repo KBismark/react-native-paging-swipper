@@ -1,0 +1,25 @@
+{
+  "name": "react-native-paging-swipper",
+  "version": "0.0.1",
+  "description": "Simple pagination and swipping feature for react native",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "react": ">=18.2.0",
+    "react-native": "^0.74.1",
+    "react-native-gesture-handler": "^2.16.2"
+  },
+  "devDependencies": {
+    "@babel/core": ">=7.20.0",
+    "@types/react": ">=18.2.45",
+    "typescript": ">=5.3.3"
+  },
+  "keywords": [
+    "pagination",
+    "swipe"
+  ],
+  "author": "",
+  "license": "MIT"
+}
