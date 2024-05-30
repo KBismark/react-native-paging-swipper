@@ -8,6 +8,11 @@ import { type GestureData } from "../utils/gesturedata";
 import { onDoneScrolling } from "./scrollview";
 
 
+
+
+
+
+
 export type ContainerProps<ItemT> = {
     // children: React.ReactNode|React.JSX.Element;
     gestureData: GestureData;
@@ -104,31 +109,32 @@ export function ScreenContainer<ItemT = any>({
         data.index = gestureData.cursor-1;
         data.animated = !false;
         // ref.current?.scrollToIndex(data);
-        timeout = setTimeout(activateScrollEndCallback, 10);
+        // timeout = setTimeout(activateScrollEndCallback, 10);
+        activateScrollEndCallback()
     }
     
     const onScrollEnd = horizontal? (e: any)=>{
         if(automaticscroll){ return}
         clearTimeout(timeout);
         scrollData = GetScrollRatio(e); 
-        timeout = setTimeout(()=>{
+        // timeout = setTimeout(()=>{
             onDoneScrolling({
                 length:width,direction:'x',gestureData:gestureData,
                 offset:scrollData.offset,callback: onDoneScrollingCallback
             })
-        }, 0);
+        // }, 0);
     }
     : (e:any)=>{
         if(automaticscroll){ return}
         clearTimeout(timeout);
         scrollData = GetScrollRatio(e);
-        timeout = setTimeout(()=>{
+        // timeout = setTimeout(()=>{
             onDoneScrolling({
                 length:height,direction:'y',gestureData:gestureData,
                 offset:scrollData.offset,callback: onDoneScrollingCallback
             })
 
-        }, 0);
+        // }, 0);
     };
     const RenderItem = renderItem;
     const EmptyScren = ()=>{
@@ -167,7 +173,7 @@ export function ScreenContainer<ItemT = any>({
                 renderItem={
                     RenderItem?
                     (props)=>{
-                        return <Screen gestureData={gestureData}><RenderItem {...props} /></Screen>
+                        return <Screen gestureData={gestureData} index={props.index}><RenderItem {...props} /></Screen>
                     }:
                     EmptyScren
                 }
