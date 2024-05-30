@@ -173,7 +173,7 @@ export function ScreenContainer<ItemT = any>({
                 renderItem={
                     RenderItem?
                     (props)=>{
-                        return <Screen gestureData={gestureData} index={props.index}><RenderItem {...props} /></Screen>
+                        return <Screen gestureData={gestureData}><RenderItem {...props} /></Screen>
                     }:
                     EmptyScren
                 }
