@@ -18,6 +18,7 @@ export type ContainerProps<ItemT> = {
     gestureData: GestureData;
     sharableTopComponent?: React.ReactNode|React.JSX.Element;
     sharableBottomComponent?: React.ReactNode|React.JSX.Element;
+    isNested?:boolean;
     // ref: any;
     /**
      * 

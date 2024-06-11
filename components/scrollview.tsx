@@ -61,6 +61,7 @@ export type ContainerProps = {
     gestureData: GestureData;
     sharableTopComponent?: React.ReactNode|React.JSX.Element;
     sharableBottomComponent?: React.ReactNode|React.JSX.Element;
+    isNested?:boolean;
     /**
      * 
      * @param index Screen is indexed starting from the number `1`

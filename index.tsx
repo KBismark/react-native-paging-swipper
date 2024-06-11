@@ -6,12 +6,10 @@ import { ScreenContainer as FlatListScreen, ContainerProps as FlatListContainerP
 export const Scrollable = {
     getGestureData,
     NestedScrollScreenContainer(props: ContainerProps){
-        (props as any).isNested = true;
-        return <ScrollViewScreen {...props}/>
+        return <ScrollViewScreen {...props} isNested={true} />
     },
     NestedFlatListScreenContainer<T=any>(props: FlatListContainerProps<T>){
-        (props as any).isNested = true;
-        return <FlatListScreen {...props}/>
+        return <FlatListScreen {...props} isNested={true} />
     },
     Screen: Screen,
     FlatListScreenContainer: FlatListScreen,
